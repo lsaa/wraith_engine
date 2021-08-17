@@ -22,9 +22,7 @@ rustflags = [
 	"-C", "link-arg=-s", "-C", "link-arg=USE_SDL_IMAGE=2", 
 	"-C", "link-arg=-s", "-C", "link-arg=SDL2_IMAGE_FORMATS=[\"png\"]",
 	"-C", "link-arg=-s", "-C", "link-arg=MIN_WEBGL_VERSION=2",
-	"-C", "link-arg=-s", "-C", "link-arg=MAX_WEBGL_VERSION=2",
-	"-C", "link-arg=---use-preload-plugins",
-    "-C", "link-arg=--preload-file", "-C", "link-arg=assets"
+	"-C", "link-arg=-s", "-C", "link-arg=MAX_WEBGL_VERSION=2"
 ]
 
 # Optional: Uncommenting the following improves compile times, but reduces the amount of debug info to 'line number tables only'
