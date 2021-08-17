@@ -10,7 +10,7 @@ opt-level = 3
 opt-level = 1
 
 [dependencies]
-legion = { version = "0.4.0", default-features = false, features = ["wasm-bindgen"] }
+#legion = { version = "0.4.0", default-features = false, features = ["wasm-bindgen"] }
 raw-window-handle = "0.3"
 emscripten_main_loop = "0.1"
 
