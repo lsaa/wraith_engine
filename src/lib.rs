@@ -1,4 +1,4 @@
-extern crate sdl2;
+pub extern crate sdl2;
 
 #[cfg(target_arch = "wasm32")]
 use emscripten_main_loop::{MainLoop, MainLoopEvent};
