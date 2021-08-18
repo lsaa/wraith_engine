@@ -2,6 +2,8 @@
 // sdl2_helper.rs - SDL2 Helper
 //
 
+pub mod texture_manager;
+
 use sdl2::video::Window;
 use sdl2::render::Canvas;
 use sdl2::EventPump;

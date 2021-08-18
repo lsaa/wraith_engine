@@ -3,18 +3,16 @@ name = "wraith_engine"
 version = "0.1.0"
 edition = "2018"
 
-[profile.dev.package."*"]
-opt-level = 3
+[workspace]
+members = ["crates/*"]
 
-[profile.dev]
-opt-level = 1
+[features]
+default = [
+	
+]
+sdl2 = ["wraith_sdl2"]
 
 [dependencies]
 #legion = { version = "0.4.0", default-features = false, features = ["wasm-bindgen"] }
-raw-window-handle = "0.3"
 emscripten_main_loop = "0.1"
-
-[dependencies.sdl2]
-version = "0.34"
-default-features = false
-features = ["ttf","image","gfx","mixer","raw-window-handle"]
+wraith_sdl2 = { version = "0.1", path = "crates/wraith_sdl2", optional = true }
