@@ -33,4 +33,12 @@ impl TextureManager {
 
 		Err("Texture isn't loaded")
 	}
+
+	pub fn drop(&mut self, key: String) {
+		let removed = self.cache.remove(&key);
+		if removed.is_some() {
+			// YOLO
+			unsafe { removed.unwrap().destroy() };
+		}
+	}
 }
