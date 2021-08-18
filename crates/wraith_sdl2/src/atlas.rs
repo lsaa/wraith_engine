@@ -4,7 +4,6 @@
 
 use std::collections::HashMap;
 use sdl2::rect::Rect;
-use sdl2::surface::Surface;
 use rectangle_pack::pack_rects;
 use rectangle_pack::volume_heuristic;
 use rectangle_pack::contains_smallest_box;
@@ -91,8 +90,7 @@ impl TextureAtlasBuilder {
 		let built = built.ok_or(String::from("Couldn't fit texture in atlas bin")).unwrap();
 
 		let texture_creator = canvas.texture_creator();
-		let surface = Surface::new(cw, ch, PixelFormatEnum::RGBA8888).unwrap();
-		let mut texture = texture_creator.create_texture_from_surface(surface).unwrap();
+		let mut texture = texture_creator.create_texture_target(PixelFormatEnum::RGBA8888, cw, ch).unwrap();
 
 		let rects = HashMap::new();
 		for (path, (_, location)) in built.packed_locations().iter() {
