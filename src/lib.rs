@@ -1,3 +1,10 @@
+//
+//	Hmmm fun video gaems
+//
+
+#[cfg(feature = "sdl2")]
+pub use wraith_sdl2 as sdl2;
+
 #[cfg(target_arch = "wasm32")]
 use emscripten_main_loop::{MainLoop, MainLoopEvent};
 
