@@ -5,6 +5,7 @@ edition = "2018"
 
 [dependencies]
 raw-window-handle = "0.3"
+rectangle-pack = "0.4.2"
 
 [dependencies.sdl2]
 version = "0.34"

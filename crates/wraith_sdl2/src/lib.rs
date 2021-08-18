@@ -3,6 +3,7 @@
 //
 
 pub mod texture_manager;
+pub mod atlas;
 
 use sdl2::video::Window;
 use sdl2::render::Canvas;
