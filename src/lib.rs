@@ -26,7 +26,6 @@ impl<State> MainLoop for WraithGame<State> {
 		let dtime = Instant::now() - self.last_time;
 		self.last_time = Instant::now();
 		if (self.run_loop)(&mut self.state, dtime) == LoopState::QUIT {
-			println!("GAME EXIT");
 			return MainLoopEvent::Terminate;
 		}
 		return MainLoopEvent::Continue;

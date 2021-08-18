@@ -26,11 +26,9 @@ pub fn set_stretch_mode(canvas: &mut Canvas<Window>, mode: &StretchMode) {
 			let _ = canvas.set_scale(s.0, s.1);
 		},
 		StretchMode::LETTERBOX => {
-			let _ = canvas.set_logical_size(64, 64);
 			unsafe { sdl2::sys::SDL_RenderSetIntegerScale(canvas.raw(), sdl2::sys::SDL_bool::SDL_FALSE);}
 		},
 		StretchMode::PIXELPERFECT => {
-			let _ = canvas.set_logical_size(64, 64);
 			unsafe { sdl2::sys::SDL_RenderSetIntegerScale(canvas.raw(), sdl2::sys::SDL_bool::SDL_TRUE);}
 		},
 	}
