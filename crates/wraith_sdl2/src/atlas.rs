@@ -92,7 +92,7 @@ impl TextureAtlasBuilder {
 		let texture_creator = canvas.texture_creator();
 		let mut texture = texture_creator.create_texture_target(PixelFormatEnum::RGBA8888, cw, ch).unwrap();
 
-		let rects = HashMap::new();
+		let mut rects = HashMap::new();
 		for (path, (_, location)) in built.packed_locations().iter() {
 			let ct = self.texture_manager.load(path).unwrap();
 			let (w, h) = (ct.query().width, ct.query().height);
@@ -102,6 +102,7 @@ impl TextureAtlasBuilder {
                 let _res = texture_canvas.copy(ct, Rect::new(0, 0, w, h), Rect::new(x1, y1, x2, y2));
             })
             .map_err(|e| e.to_string())?;
+			rects.insert(path.to_string(), Rect::new(x1, y1, x2, y2));
 			self.texture_manager.drop(path.to_string());
 		}
 
