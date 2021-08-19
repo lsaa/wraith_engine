@@ -2,16 +2,16 @@
 //	Hmmm fun video gaems
 //
 
+use std::time::Duration;
+use std::time::Instant;
+
+pub mod util;
+
 #[cfg(feature = "sdl2")]
 pub use wraith_sdl2 as sdl2;
 
 #[cfg(target_arch = "wasm32")]
 use emscripten_main_loop::{MainLoop, MainLoopEvent};
-
-use std::time::Duration;
-use std::time::Instant;
-
-pub mod util;
 
 pub struct WraithGame<State> {
 	pub state: State,

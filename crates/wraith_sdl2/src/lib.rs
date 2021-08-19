@@ -6,13 +6,14 @@ pub mod texture_manager;
 pub mod atlas;
 pub mod texture_store;
 
-use sdl2::rect::Rect;
 use sdl2::surface::Surface;
 use sdl2::render::Texture;
 use std::path::Path;
 use sdl2::video::Window;
 use sdl2::render::Canvas;
+use std::convert::TryInto;
 use sdl2::EventPump;
+use sdl2::image::SaveSurface;
 
 // Window
 
@@ -66,12 +67,29 @@ pub fn logical_mouse_position(events: &EventPump, canvas: &Canvas<Window>) -> Op
 	))
 }
 
-pub fn save_texture_to_file(path: &Path, texture: &Texture) -> Result<(), String> {
+/*
+    SDL_Texture* target = SDL_GetRenderTarget(renderer);
+    SDL_SetRenderTarget(renderer, texture);
+    int width, height;
+    SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+    SDL_RenderReadPixels(renderer, NULL, surface->format->format, surface->pixels, surface->pitch);
+    IMG_SavePNG(surface, file_name);
+    SDL_FreeSurface(surface);
+    SDL_SetRenderTarget(renderer, target);
+*/
+
+pub fn save_texture_to_file(canvas: Canvas<Window>, path: &Path, texture: &mut Texture) -> Result<(), String> {
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
-	let surface = Surface::new(w, h, format)?;
-	let mut c = surface.into_canvas()?;
-	c.copy(texture, Rect::new(0, 0, w, h), Rect::new(0, 0, w, h))?;
-	let surface = c.surface_mut();
-	surface.save_bmp(path)
+	//let target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
+	let pixels_vec = canvas.read_pixels(None, format)?;
+	let mut pixels = vec_to_arr::<u8, 1>(pixels_vec);
+	let surface = Surface::from_data(&mut pixels, w, h, 0, format)?;
+	surface.save(path)
+}
+
+fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
+    v.try_into()
+        .unwrap_or_else(|v: Vec<T>| panic!("Expected a Vec of length {} but it was {}", N, v.len()))
 }

@@ -45,9 +45,9 @@ impl HsvColor {
 	}
 
 	fn space_conversion(&self, n: u32) -> u8 {
-		let (h, s, v) = self.as_float_tuple();
-		let k = (n as f32 + ((h * 360.0)/60.0)) % 6.0;
-		((v - (v * s * k.min(4.0 - k).min(1.0).max(0.0))) * 255.0) as u8
+		let (hue, saturation, value) = self.as_float_tuple();
+		let k = (n as f32 + ((hue * 360.0)/60.0)) % 6.0;
+		((value - (value * saturation * k.min(4.0 - k).min(1.0).max(0.0))) * 255.0) as u8
 	}
 
 	pub fn to_rgb(&self) -> RgbColor {

@@ -37,7 +37,7 @@ impl TileMap {
 	}
 
 	pub fn get_cell(&self, x: u32, y: u32) -> u32 {
-		return self.cells[self.width as usize * y as usize + x as usize];
+		self.cells[self.width as usize * y as usize + x as usize]
 	}
 
 	pub fn set_cell(&mut self, x: u32, y: u32, value: u32) {
