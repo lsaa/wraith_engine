@@ -79,7 +79,7 @@ pub fn logical_mouse_position(events: &EventPump, canvas: &Canvas<Window>) -> Op
     SDL_SetRenderTarget(renderer, target);
 */
 
-pub fn save_texture_to_file(canvas: Canvas<Window>, path: &Path, texture: &mut Texture) -> Result<(), String> {
+pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &mut Texture) -> Result<(), String> {
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
 	//let target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
