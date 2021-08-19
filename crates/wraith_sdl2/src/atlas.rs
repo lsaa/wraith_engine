@@ -25,7 +25,7 @@ pub struct TextureAtlas {
 }
 
 impl TextureAtlas {
-	pub fn get(&self, path: &str) -> Option<&Rect> {
+	pub fn get_cache(&self, path: &str) -> Option<&Rect> {
 		self.rects.get(&path.to_string())
 	}
 }
@@ -42,7 +42,7 @@ impl TextureAtlasBuilder {
 		for tex in files {
 			let res = texture_manager.create(tex, canvas);
 			if res.is_err() { return Err(format!("Couldn't load texture {} from the list", tex)); }
-			let t = texture_manager.load(tex).unwrap();
+			let t = texture_manager.get_cache(tex).unwrap();
 			let (w, h) = (t.query().width, t.query().height);
 			rects.push_rect(tex.to_owned(), None, RectToInsert::new(w, h, 1));
 		}
@@ -53,11 +53,11 @@ impl TextureAtlasBuilder {
 		})
 	}
 
-	pub fn build(&mut self, canvas: &mut Canvas<Window>) -> Result<TextureAtlas, String> {
+	pub fn build(&mut self, canvas: &mut Canvas<Window>, max_size: Option<(u32, u32)>, pixel_format: Option<PixelFormatEnum>) -> Result<TextureAtlas, String> {
 		let start_w = 32;
 		let start_h = 32;
-		let max_h = 4096;
-		let max_w = 4096;
+		let max_w = if max_size.is_some() { max_size.unwrap().0 } else { 4096 };
+		let max_h = if max_size.is_some() { max_size.unwrap().1 } else { 4096 };
 		let mut cw = start_w;
 		let mut ch = start_h;
 
@@ -92,11 +92,12 @@ impl TextureAtlasBuilder {
 		let built = built.ok_or(String::from("Couldn't fit texture in atlas bin")).unwrap();
 
 		let texture_creator = canvas.texture_creator();
-		let mut texture = texture_creator.create_texture_target(PixelFormatEnum::RGBA8888, cw, ch).unwrap();
+		let format = if pixel_format.is_some() { pixel_format.unwrap() } else { PixelFormatEnum::RGBA8888 };
+		let mut texture = texture_creator.create_texture_target(format, cw, ch).unwrap();
 
 		let mut rects = HashMap::new();
 		for (path, (_, location)) in built.packed_locations().iter() {
-			let ct = self.texture_manager.load(path).unwrap();
+			let ct = self.texture_manager.get_cache(path).unwrap();
 			let (w, h) = (ct.query().width, ct.query().height);
 			let (x1, y1) = (location.x() as i32, location.y() as i32);
 			let (x2, y2) = (x1 as u32 + location.width(), y1 as u32 + location.height());
@@ -117,8 +118,8 @@ impl TextureAtlasBuilder {
 }
 
 impl TextureStore for TextureAtlas {
-	fn load(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
-		let res = self.get(path);
+	fn get(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
+		let res = self.get_cache(path);
 		if res.is_some() {
 			return Ok((&self.img, res.unwrap().clone()));
 		}

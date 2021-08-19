@@ -29,7 +29,7 @@ impl TextureManager {
 		return Ok(());
 	}
 
-	pub fn load(&mut self, path: &str) -> Result<&Texture, &str> {
+	pub fn get_cache(&mut self, path: &str) -> Result<&Texture, &str> {
 		if self.cache.contains_key(&String::from(path)) {
             return Ok(self.cache.get(&String::from(path)).unwrap());
 		}
@@ -47,8 +47,8 @@ impl TextureManager {
 }
 
 impl TextureStore for TextureManager {
-	fn load(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
-		let res = self.load(path);
+	fn get(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
+		let res = self.get_cache(path);
 		if res.is_ok() {
 			let t = res.unwrap();
 			let dims = t.query();

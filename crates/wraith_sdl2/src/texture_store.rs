@@ -19,5 +19,5 @@ impl LoadTextureError {
 }
 
 pub trait TextureStore {
-	fn load(&mut self, identifier: &str) -> Result<(&Texture, Rect), LoadTextureError>;
+	fn get(&mut self, identifier: &str) -> Result<(&Texture, Rect), LoadTextureError>;
 }
