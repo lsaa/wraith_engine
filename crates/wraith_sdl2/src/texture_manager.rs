@@ -1,3 +1,6 @@
+use sdl2::rect::Rect;
+use crate::texture_store::LoadTextureError;
+use crate::texture_store::TextureStore;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use sdl2::render::Texture;
@@ -40,5 +43,17 @@ impl TextureManager {
 			// YOLO
 			unsafe { removed.unwrap().destroy() };
 		}
+	}
+}
+
+impl TextureStore for TextureManager {
+	fn load(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
+		let res = self.load(path);
+		if res.is_ok() {
+			let t = res.unwrap();
+			let dims = t.query();
+			return Ok((t, Rect::new(0, 0, dims.width, dims.height)));
+		}
+		Err(LoadTextureError::new(path))
 	}
 }

@@ -2,6 +2,8 @@
 // altas.rs - TextureAtlas builder
 //
 
+use crate::texture_store::LoadTextureError;
+use crate::texture_store::TextureStore;
 use std::collections::HashMap;
 use sdl2::rect::Rect;
 use rectangle_pack::pack_rects;
@@ -111,5 +113,15 @@ impl TextureAtlasBuilder {
 			rects
 		})
 
+	}
+}
+
+impl TextureStore for TextureAtlas {
+	fn load(&mut self, path: &str) -> Result<(&Texture, Rect), LoadTextureError> {
+		let res = self.get(path);
+		if res.is_some() {
+			return Ok((&self.img, res.unwrap().clone()));
+		}
+		Err(LoadTextureError::new(path))
 	}
 }
