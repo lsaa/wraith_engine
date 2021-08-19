@@ -11,7 +11,6 @@ use sdl2::render::Texture;
 use std::path::Path;
 use sdl2::video::Window;
 use sdl2::render::Canvas;
-use std::convert::TryInto;
 use sdl2::EventPump;
 use sdl2::image::SaveSurface;
 
@@ -83,13 +82,8 @@ pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
 	//let target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
-	let pixels_vec = canvas.read_pixels(None, format)?;
-	let mut pixels = vec_to_arr::<u8, 1>(pixels_vec);
+	let mut pixels_vec = canvas.read_pixels(None, format)?;
+	let mut pixels: &mut [u8] = &mut pixels_vec;
 	let surface = Surface::from_data(&mut pixels, w, h, 0, format)?;
 	surface.save(path)
-}
-
-fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
-    v.try_into()
-        .unwrap_or_else(|v: Vec<T>| panic!("Expected a Vec of length {} but it was {}", N, v.len()))
 }
