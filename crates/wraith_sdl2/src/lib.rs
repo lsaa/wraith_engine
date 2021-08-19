@@ -6,6 +6,10 @@ pub mod texture_manager;
 pub mod atlas;
 pub mod texture_store;
 
+use sdl2::rect::Rect;
+use sdl2::surface::Surface;
+use sdl2::render::Texture;
+use std::path::Path;
 use sdl2::video::Window;
 use sdl2::render::Canvas;
 use sdl2::EventPump;
@@ -60,4 +64,14 @@ pub fn logical_mouse_position(events: &EventPump, canvas: &Canvas<Window>) -> Op
 		(new_x as f32 / real_w * logical_w as f32) as u32,
 		(new_y as f32 / real_h * logical_h as f32) as u32,
 	))
+}
+
+pub fn save_texture_to_file(path: &Path, texture: &Texture) -> Result<(), String> {
+	let query = texture.query();
+	let (w, h, format) = (query.width, query.height, query.format);
+	let surface = Surface::new(w, h, format)?;
+	let mut c = surface.into_canvas()?;
+	c.copy(texture, Rect::new(0, 0, w, h), Rect::new(0, 0, w, h))?;
+	let surface = c.surface_mut();
+	surface.save_bmp(path)
 }
