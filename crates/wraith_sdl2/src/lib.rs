@@ -88,7 +88,7 @@ pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &
 		tex.copy(texture, r, r).unwrap();
 		let mut pixels_vec = tex.read_pixels(r, format).unwrap();
 		let mut pixels: &mut [u8] = &mut pixels_vec;
-		let surface = Surface::from_data(&mut pixels, w, h, 0, format).unwrap();
+		let surface = Surface::from_data(&mut pixels, w, h, 1, format).unwrap();
 		let _= surface.save(path);
 	}).unwrap();
 	Ok(())
