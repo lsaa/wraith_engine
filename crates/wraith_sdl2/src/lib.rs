@@ -6,6 +6,7 @@ pub mod texture_manager;
 pub mod atlas;
 pub mod texture_store;
 
+use sdl2::rect::Rect;
 use sdl2::surface::Surface;
 use sdl2::render::Texture;
 use std::path::Path;
@@ -82,9 +83,10 @@ pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
 	let mut target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
+	let r = Rect::new(0, 0, w, h);
 	canvas.with_texture_canvas(&mut target, |tex| {
-		tex.copy(texture, None, None).unwrap();
-		let mut pixels_vec = tex.read_pixels(None, format).unwrap();
+		tex.copy(texture, r, r).unwrap();
+		let mut pixels_vec = tex.read_pixels(r, format).unwrap();
 		let mut pixels: &mut [u8] = &mut pixels_vec;
 		let surface = Surface::from_data(&mut pixels, w, h, 0, format).unwrap();
 		let _= surface.save(path);
