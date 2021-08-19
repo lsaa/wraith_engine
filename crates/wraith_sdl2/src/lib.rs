@@ -83,13 +83,11 @@ pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
 	let mut target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
-	let r = Rect::new(0, 0, w, h);
 	canvas.with_texture_canvas(&mut target, |tex| {
-		tex.copy(texture, r, r).unwrap();
-		let mut pixels_vec = tex.read_pixels(r, format).unwrap();
-		let mut pixels: &mut [u8] = &mut pixels_vec;
-		let s = Surface::new(w, h, format).unwrap();
-		let surface = Surface::from_data(&mut pixels, w, h, s.pitch(), format).unwrap();
+		tex.copy(texture, None, None).unwrap();
+		let mut pixels_vec = tex.read_pixels(None, format).unwrap();
+		let pitch = format.byte_size_of_pixels(w as usize * h as usize) as u32;
+		let surface = Surface::from_data(&mut pixels_vec, w, h, pitch, format).unwrap();
 		let _= surface.save(path);
 	}).unwrap();
 	Ok(())
