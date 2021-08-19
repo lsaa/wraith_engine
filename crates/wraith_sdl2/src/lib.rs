@@ -81,7 +81,10 @@ pub fn logical_mouse_position(events: &EventPump, canvas: &Canvas<Window>) -> Op
 pub fn save_texture_to_file(canvas: &mut Canvas<Window>, path: &Path, texture: &mut Texture) -> Result<(), String> {
 	let query = texture.query();
 	let (w, h, format) = (query.width, query.height, query.format);
-	//let target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
+	let mut target = canvas.texture_creator().create_texture_target(format, w, h).unwrap();
+	canvas.with_texture_canvas(&mut target, |tex| {
+		tex.copy(texture, None, None).unwrap();
+	}).unwrap();
 	let mut pixels_vec = canvas.read_pixels(None, format)?;
 	let mut pixels: &mut [u8] = &mut pixels_vec;
 	let surface = Surface::from_data(&mut pixels, w, h, 0, format)?;
